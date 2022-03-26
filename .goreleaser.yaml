@@ -1,0 +1,6 @@
+brews:
+  - name: metronome
+    homepage: https://github.com/MadeleineSmith/homebrew-metronome
+    tap:
+      owner: MadeleineSmith
+      name: homebrew-metronome
