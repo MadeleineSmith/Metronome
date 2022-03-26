@@ -35,13 +35,20 @@ func main() {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	print("Beats Per Minute: ")
+	print("Beats Per Minute (default 60): ")
 	bpmInput, _ := reader.ReadString('\n')
-	bpm, _ := strconv.ParseFloat(strings.TrimRight(bpmInput, "\n"), 64)
+	bpm := 60.0
+	if bpmInput != "\n" {
+		bpm, _ = strconv.ParseFloat(strings.TrimRight(bpmInput, "\n"), 64)
+	}
 
-	print("Beats Per Bar: ")
+	print("Beats Per Bar (default 4): ")
 	bpbInput, _ := reader.ReadString('\n')
-	bpb, _ := strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
+	bpb := 4
+
+	if bpbInput != "\n" {
+		bpb, _ = strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
+	}
 
 	// ==================
 
