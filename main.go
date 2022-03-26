@@ -1,12 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -30,8 +33,17 @@ func main() {
 
 	// ==================
 
-	var bpm = 60.0 // Beats Per Minute
-	var bpb = 4    // Beats Per Bar
+	reader := bufio.NewReader(os.Stdin)
+
+	print("Beats Per Minute: ")
+	bpmInput, _ := reader.ReadString('\n')
+	bpm, _ := strconv.ParseFloat(strings.TrimRight(bpmInput, "\n"), 64)
+
+	print("Beats Per Bar: ")
+	bpbInput, _ := reader.ReadString('\n')
+	bpb, _ := strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
+
+	// ==================
 
 	d := time.Duration(float64(time.Minute) / bpm)
 	fmt.Println("Delay:", d)
