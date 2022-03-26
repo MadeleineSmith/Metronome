@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/faiface/beep"
+	"github.com/faiface/beep/effects"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 	"log"
@@ -62,14 +63,21 @@ func main() {
 			i = bpb
 			fmt.Printf("\nTICK ")
 
-			shot := buffer.Streamer(0, buffer.Len())
-			speaker.Play(shot)
+			pop := buffer.Streamer(0, buffer.Len())
+
+			louderPop := &effects.Volume{
+				Streamer: pop,
+				Base:     1.5,
+				Volume:   1,
+				Silent:   false,
+			}
+			speaker.Play(louderPop)
 
 		} else {
 			fmt.Printf("tick ")
 
-			shot := buffer.Streamer(0, buffer.Len())
-			speaker.Play(shot)
+			pop := buffer.Streamer(0, buffer.Len())
+			speaker.Play(pop)
 		}
 	}
 }
