@@ -15,8 +15,10 @@ import (
 )
 
 func main() {
+	println("Metronome has started!")
+
 	// ==================
-	f, err := os.Open("pop.mp3")
+	f, err := os.Open("./pop.mp3")
 	if err != nil {
 		log.Fatal(err)
 	}
