@@ -1,6 +1,8 @@
 # Metronome
 
-https://user-images.githubusercontent.com/16705876/177579026-0957fa53-97c1-4672-8191-5708aab7d6fc.mov
+https://user-images.githubusercontent.com/16705876/177579291-56708ab8-b189-4228-b67e-6ec88d9178af.mov
+
+(Put the sound on 😊)
 
 ## Background
 * I wanted to build out a **metronome** on the command line so I didn't have to rely on Google's metronome
