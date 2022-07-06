@@ -5,9 +5,12 @@
 * The metronome logic is taken from [Rosetta Code's metronome solution](https://rosettacode.org/wiki/Metronome#Go), and I used the Go [beep](https://github.com/faiface/beep) package to output sound
 * I created a [Homebrew tap](https://github.com/MadeleineSmith/homebrew-metronome) for [easy installation](#first-install-instructions) of the metronome package
 
+---
 
 ## First install instructions:
 * ` brew tap madeleinesmith/metronome && brew install metronome `
+
+---
 
 ## How to release new version and update local package:
 Releasing new version:
@@ -22,8 +25,9 @@ Releasing new version:
 Updating the local package:
 * Run ``` brew update && brew upgrade metronome ```
 
+---
 
-## Tutorials referenced in building:
+## Tutorials referenced whilst building:
 Creating a Homebrew tap:
 * https://betterprogramming.pub/a-step-by-step-guide-to-create-homebrew-taps-from-github-repos-f33d3755ba74
 * https://flowerinthenight.com/blog/2019/07/30/homebrew-golang
