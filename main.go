@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"embed"
 	"fmt"
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/effects"
@@ -14,16 +15,18 @@ import (
 	"time"
 )
 
+var (
+	//go:embed pop.mp3
+	res embed.FS
+)
+
 func main() {
 	println("Metronome has started!")
 
 	// ==================
-	f, err := os.Open("./pop.mp3")
-	if err != nil {
-		log.Fatal(err)
-	}
+	audioFile, _ := res.Open("pop.mp3")
 
-	streamer, format, err := mp3.Decode(f)
+	streamer, format, err := mp3.Decode(audioFile)
 	if err != nil {
 		log.Fatal(err)
 	}
