@@ -1,6 +1,6 @@
 # Metronome
 
-https://user-images.githubusercontent.com/16705876/177578458-711f4562-ecc1-4951-91d3-c7084bf8eb9b.mov
+[Demo video - sound on](https://user-images.githubusercontent.com/16705876/177578458-711f4562-ecc1-4951-91d3-c7084bf8eb9b.mov)
 
 
 ## Background
