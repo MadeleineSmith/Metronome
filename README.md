@@ -1,5 +1,8 @@
 # Metronome
 
+https://user-images.githubusercontent.com/16705876/177578458-711f4562-ecc1-4951-91d3-c7084bf8eb9b.mov
+
+
 ## Background
 * I wanted to build out a **metronome** on the command line so I didn't have to rely on Google's metronome
 * The metronome logic is taken from [Rosetta Code's metronome solution](https://rosettacode.org/wiki/Metronome#Go), and I used the Go [beep](https://github.com/faiface/beep) package to output sound
