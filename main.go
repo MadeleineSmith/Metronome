@@ -23,7 +23,14 @@ var (
 func main() {
 	println("Metronome has started!")
 
-	// ==================
+	buffer := initializeBuffer()
+
+	bpm, bpb := retrieveBeatsInput()
+
+	initializeMetronome(bpm, bpb, buffer)
+}
+
+func initializeBuffer() *beep.Buffer {
 	audioFile, _ := res.Open("pop.mp3")
 
 	streamer, format, err := mp3.Decode(audioFile)
@@ -37,8 +44,10 @@ func main() {
 	buffer.Append(streamer)
 	streamer.Close()
 
-	// ==================
+	return buffer
+}
 
+func retrieveBeatsInput() (float64, int) {
 	reader := bufio.NewReader(os.Stdin)
 
 	print("Beats Per Minute (default 60): ")
@@ -51,17 +60,20 @@ func main() {
 	print("Beats Per Bar (default 4): ")
 	bpbInput, _ := reader.ReadString('\n')
 	bpb := 4
-
 	if bpbInput != "\n" {
 		bpb, _ = strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
 	}
 
-	// ==================
+	return bpm, bpb
+}
 
+func initializeMetronome(bpm float64, bpb int, buffer *beep.Buffer) {
 	d := time.Duration(float64(time.Minute) / bpm)
 	fmt.Println("Delay:", d)
+
 	t := time.NewTicker(d)
 	i := 1
+
 	for _ = range t.C {
 		i--
 		if i == 0 {
