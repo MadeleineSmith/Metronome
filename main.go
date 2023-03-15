@@ -83,7 +83,6 @@ func retrieveBeatsInput() (int, int, map[int]int) {
 
 func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisionsMap map[int]int, buffer *beep.Buffer) {
 	beatsInterval := time.Duration(float64(time.Minute) / float64(numBeatsPerMinute))
-
 	beatsTicker := time.NewTicker(beatsInterval)
 
 	beatsIndex := 0
@@ -92,26 +91,14 @@ func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisions
 		// so for 4 beats in a bar, the value of this on each iteration will be 0, 1, 2, 3, 0 ...
 		beatNum := beatsIndex % numBeatsPerBar
 
-		// todo - remove duplication here:
-		switch beatNum {
-		case 0:
-			println("========")
-			humanBeatNum := beatNum + 1
-			fmt.Printf("%d - \n", humanBeatNum)
+		println("========")
+		humanBeatNum := beatNum + 1
+		fmt.Printf("%d - \n", humanBeatNum)
 
-			pop := buffer.Streamer(0, buffer.Len())
+		pop := buffer.Streamer(0, buffer.Len())
+		speaker.Play(pop)
 
-			speaker.Play(pop)
-
-		default:
-			println("========")
-			humanBeatNum := beatNum + 1
-			fmt.Printf("%d - \n", humanBeatNum)
-
-			pop := buffer.Streamer(0, buffer.Len())
-			speaker.Play(pop)
-		}
-
+		// for each beat, I'm creating a new 'subdivisionsTicker' to keep track of the subdivisions
 		numSubdivisions := subdivisionsMap[beatNum]
 		subdivisionsInterval := beatsInterval / time.Duration(numSubdivisions)
 
