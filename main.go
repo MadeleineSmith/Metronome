@@ -25,9 +25,9 @@ func main() {
 
 	buffer := initializeBuffer()
 
-	bpm, bpb := retrieveBeatsInput()
+	bpm, bpb, subdivisionsMap := retrieveBeatsInput()
 
-	initializeMetronome(bpm, bpb, buffer)
+	initializeMetronome(bpm, bpb, subdivisionsMap, buffer)
 }
 
 func initializeBuffer() *beep.Buffer {
@@ -47,12 +47,12 @@ func initializeBuffer() *beep.Buffer {
 	return buffer
 }
 
-func retrieveBeatsInput() (int, int) {
+func retrieveBeatsInput() (int, int, map[int]int) {
 	reader := bufio.NewReader(os.Stdin)
 
-	print("Beats Per Minute (default 60): ")
+	print("Beats Per Minute (default 15): ")
 	bpmInput, _ := reader.ReadString('\n')
-	bpm := 60
+	bpm := 15
 	if bpmInput != "\n" {
 		bpm, _ = strconv.Atoi(strings.TrimRight(bpmInput, "\n"))
 	}
@@ -64,69 +64,78 @@ func retrieveBeatsInput() (int, int) {
 		bpb, _ = strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
 	}
 
-	return bpm, bpb
+	subdivisionsMap := make(map[int]int)
+	for i := 0; i < bpb; i++ {
+		fmt.Printf("Num subdivisions for beat number %d (default 4): ", i+1)
+
+		numSubdivisionsInput, _ := reader.ReadString('\n')
+		numSubdivisions := 4
+		if numSubdivisionsInput != "\n" {
+			numSubdivisions, _ = strconv.Atoi(strings.TrimRight(numSubdivisionsInput, "\n"))
+		}
+
+		subdivisionsMap[i] = numSubdivisions
+	}
+	println()
+
+	return bpm, bpb, subdivisionsMap
 }
 
-func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, buffer *beep.Buffer) {
+func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisionsMap map[int]int, buffer *beep.Buffer) {
 	beatsInterval := time.Duration(float64(time.Minute) / float64(numBeatsPerMinute))
-	fmt.Println("beatsInterval:", beatsInterval)
-
-	numSubdivisions := 4
-	subdivisionsInterval := beatsInterval / time.Duration(numSubdivisions)
 
 	beatsTicker := time.NewTicker(beatsInterval)
 
-	i := 0
-	for beatTime := range beatsTicker.C {
+	beatsIndex := 0
+	for _ = range beatsTicker.C {
 		// beatNum starts at 0
 		// so for 4 beats in a bar, the value of this on each iteration will be 0, 1, 2, 3, 0 ...
-		beatNum := i % numBeatsPerBar
+		beatNum := beatsIndex % numBeatsPerBar
 
+		// todo - remove duplication here:
 		switch beatNum {
 		case 0:
-			fmt.Printf("BEAT: %d \n", beatNum)
+			println("========")
+			humanBeatNum := beatNum + 1
+			fmt.Printf("%d - \n", humanBeatNum)
 
 			pop := buffer.Streamer(0, buffer.Len())
 
-			//louderPop := &effects.Volume{
-			//	Streamer: pop,
-			//	Base:     1.5,
-			//	Volume:   1,
-			//	Silent:   false,
-			//}
 			speaker.Play(pop)
-
-			fmt.Printf("BEAT TIME: %s \n", beatTime)
 
 		default:
-			fmt.Printf("BEAT: %d \n", beatNum)
+			println("========")
+			humanBeatNum := beatNum + 1
+			fmt.Printf("%d - \n", humanBeatNum)
 
 			pop := buffer.Streamer(0, buffer.Len())
 			speaker.Play(pop)
-
-			fmt.Printf("BEAT TIME: %s \n", beatTime)
 		}
 
+		numSubdivisions := subdivisionsMap[beatNum]
+		subdivisionsInterval := beatsInterval / time.Duration(numSubdivisions)
+
 		subdivisionsTicker := time.NewTicker(subdivisionsInterval)
-		anotherIndex := 0
+		subdivisionsIndex := 0
 
-		for subTime := range subdivisionsTicker.C {
-			subdivisionNum := anotherIndex % numSubdivisions
+		for _ = range subdivisionsTicker.C {
+			// again, subdivisionNum starts at 0
+			subdivisionNum := subdivisionsIndex % numSubdivisions
+			humanSubdivisionNum := subdivisionNum + 2
 
-			fmt.Printf("SUB: %d \n", subdivisionNum)
+			fmt.Printf("  - %d \n", humanSubdivisionNum)
 
 			pop := buffer.Streamer(0, buffer.Len())
 			speaker.Play(pop)
-			fmt.Printf("SUBDIVISION TIME: %s \n", subTime)
 
 			if subdivisionNum == (numSubdivisions - 2) {
 				subdivisionsTicker.Stop()
 				break
 			}
 
-			anotherIndex++
+			subdivisionsIndex++
 		}
 
-		i++
+		beatsIndex++
 	}
 }
