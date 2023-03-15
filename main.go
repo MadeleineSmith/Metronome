@@ -21,7 +21,9 @@ var (
 )
 
 func main() {
+	println()
 	println("Metronome has started!")
+	println()
 
 	buffer := initializeBuffer()
 
@@ -64,6 +66,7 @@ func retrieveBeatsInput() (int, int, map[int]int) {
 		bpb, _ = strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
 	}
 
+	println()
 	subdivisionsMap := make(map[int]int)
 	for i := 0; i < bpb; i++ {
 		fmt.Printf("Num subdivisions for beat number %d (default 4): ", i+1)
