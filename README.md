@@ -21,7 +21,7 @@ https://user-images.githubusercontent.com/16705876/225382140-9512d0e0-564e-46a2-
 Releasing new version:
 * Tag code using ` git tag -a v0.0.2 -m "version 0.2.0" `
 * Push tag with ` git push origin v0.2.0 `
-* Create a new release on GitHub for that tag
+* Create a new release on [GitHub](https://github.com/MadeleineSmith/metronome/releases/new) for that tag
 * Copy the link of the `tar.gz` file on GitHub
 * Change the `url` line of `homebrew-metronome` [repo](https://github.com/MadeleineSmith/homebrew-metronome/blob/4661e8c8d8ef9dcafb2a46e645d57550990ba31b/metronome.rb#L7) to be this
 * And also update the `sha256` line by running `shasum -a 256 xxxxxxx.tar.gz` on the downloaded tar file (above)  
