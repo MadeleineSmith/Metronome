@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	//go:embed pop.mp3
+	//go:embed xylophone.mp3
 	res embed.FS
 )
 
@@ -33,7 +33,7 @@ func main() {
 }
 
 func initializeBuffer() *beep.Buffer {
-	audioFile, _ := res.Open("pop.mp3")
+	audioFile, _ := res.Open("xylophone.mp3")
 
 	streamer, format, err := mp3.Decode(audioFile)
 	if err != nil {
