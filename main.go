@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/faiface/beep"
-	"github.com/faiface/beep/effects"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
 )
@@ -72,67 +71,62 @@ func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, buffer *beep
 	beatsInterval := time.Duration(float64(time.Minute) / float64(numBeatsPerMinute))
 	fmt.Println("beatsInterval:", beatsInterval)
 
-	//numSubdivisions := 4
-	//subdivisionsInterval := beatsInterval / time.Duration(numSubdivisions)
-	//fmt.Println("subdivisionsInterval:", subdivisionsInterval)
+	numSubdivisions := 4
+	subdivisionsInterval := beatsInterval / time.Duration(numSubdivisions)
 
 	beatsTicker := time.NewTicker(beatsInterval)
-	//subdivisionsTicker := time.NewTicker(subdivisionsInterval)
-
-	//beatsIndex := 1
-	//subdivisionsIndex := 1
 
 	i := 0
-	for _ = range beatsTicker.C {
+	for beatTime := range beatsTicker.C {
 		// beatNum starts at 0
 		// so for 4 beats in a bar, the value of this on each iteration will be 0, 1, 2, 3, 0 ...
 		beatNum := i % numBeatsPerBar
 
 		switch beatNum {
 		case 0:
-			fmt.Printf("TICK - %d \n", beatNum)
+			fmt.Printf("BEAT: %d \n", beatNum)
 
 			pop := buffer.Streamer(0, buffer.Len())
 
-			louderPop := &effects.Volume{
-				Streamer: pop,
-				Base:     1.5,
-				Volume:   1,
-				Silent:   false,
-			}
-			speaker.Play(louderPop)
+			//louderPop := &effects.Volume{
+			//	Streamer: pop,
+			//	Base:     1.5,
+			//	Volume:   1,
+			//	Silent:   false,
+			//}
+			speaker.Play(pop)
+
+			fmt.Printf("BEAT TIME: %s \n", beatTime)
 
 		default:
-			fmt.Printf("tick - %d \n", beatNum)
+			fmt.Printf("BEAT: %d \n", beatNum)
 
 			pop := buffer.Streamer(0, buffer.Len())
 			speaker.Play(pop)
+
+			fmt.Printf("BEAT TIME: %s \n", beatTime)
+		}
+
+		subdivisionsTicker := time.NewTicker(subdivisionsInterval)
+		anotherIndex := 0
+
+		for subTime := range subdivisionsTicker.C {
+			subdivisionNum := anotherIndex % numSubdivisions
+
+			fmt.Printf("SUB: %d \n", subdivisionNum)
+
+			pop := buffer.Streamer(0, buffer.Len())
+			speaker.Play(pop)
+			fmt.Printf("SUBDIVISION TIME: %s \n", subTime)
+
+			if subdivisionNum == (numSubdivisions - 2) {
+				subdivisionsTicker.Stop()
+				break
+			}
+
+			anotherIndex++
 		}
 
 		i++
 	}
 }
-
-// 		// todo create a new subdivisionTracker for each beat?
-//		//  i.e. on each iteration of the above loop
-//		//  scrap the below code:
-//
-//		for _ = range subdivisionsTicker.C {
-//			subdivisionsIndex--
-//
-//			if subdivisionsIndex == 0 {
-//				subdivisionsIndex = numSubdivisions
-//			}
-//
-//			println("numSubdivisions", numSubdivisions)
-//			fmt.Printf("d ")
-//
-//			pop := buffer.Streamer(0, buffer.Len())
-//			speaker.Play(pop)
-//
-//			if subdivisionsIndex == 1 {
-//				subdivisionsTicker.Reset(subdivisionsInterval * 2)
-//				continue
-//			}
-//
-//		}
