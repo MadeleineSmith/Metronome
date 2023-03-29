@@ -7,7 +7,7 @@ https://user-images.githubusercontent.com/16705876/225382140-9512d0e0-564e-46a2-
 
 ## Background
 * I wanted to build out a **metronome** on the command line so I didn't have to rely on Google's metronome
-* The metronome logic is taken from [Rosetta Code's metronome solution](https://rosettacode.org/wiki/Metronome#Go), and I used the Go [beep](https://github.com/faiface/beep) package to output sound
+* I used the Go [beep](https://github.com/faiface/beep) package to output sound
 * I created a [Homebrew tap](https://github.com/MadeleineSmith/homebrew-metronome) for [easy installation](#first-install-instructions) of the metronome package
 
 ---
@@ -29,6 +29,15 @@ Releasing new version:
 
 Updating the local package:
 * Run ``` brew update && brew upgrade metronome ```
+
+---
+
+## Usage instructions
+Run the following:
+* `go run main.go -beats-per-minute=a -beats-per-bar=b -subdivisions=c,d,e,f`
+
+e.g.
+* `go run main.go -beats-per-minute=15 -beats-per-bar=4 -subdivisions=4,4,4,7`
 
 ---
 
