@@ -21,7 +21,7 @@ https://user-images.githubusercontent.com/16705876/228581110-e1ca806a-86d3-4ae7-
 
 ## How to release new version and update local package:
 Releasing new version:
-* Tag code using ` git tag -a v0.0.2 -m "version 0.2.0" `
+* Tag code using ` git tag -a v1.0.0 -m "version 1.0.0" `
 * Push tag with ` git push origin v0.2.0 `
 * Create a new release on [GitHub](https://github.com/MadeleineSmith/metronome/releases/new) for that tag
 * Copy the link of the `tar.gz` file on GitHub
@@ -35,11 +35,15 @@ Updating the local package:
 ---
 
 ## Usage instructions
-Run the following:
-* `go run main.go -beats-per-minute=a -beats-per-bar=b -subdivisions=c,d,e,f`
+When using the Brew package run:
+* `metronome -beats-per-minute=a -beats-per-bar=b -subdivisions=c,d,e,f`
 
 e.g.
-* `go run main.go -beats-per-minute=15 -beats-per-bar=4 -subdivisions=4,4,4,7`
+* `metronome -beats-per-minute=15 -beats-per-bar=4 -subdivisions=4,4,4,7`
+
+
+If running locally use:
+* `go run main.go -beats-per-minute=a -beats-per-bar=b -subdivisions=c,d,e,f`
 
 ---
 
