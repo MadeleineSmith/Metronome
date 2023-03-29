@@ -100,7 +100,7 @@ func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisions
 		}
 
 		humanBeatNum := beatNum + 1
-		fmt.Printf("%d - \n", humanBeatNum)
+		fmt.Printf("\u001B[1;33m%d\u001B[0m - \n", humanBeatNum)
 
 		pop := buffer.Streamer(0, buffer.Len())
 		speaker.Play(pop)
