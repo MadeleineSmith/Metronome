@@ -39,8 +39,6 @@ func (flag *SubdivisionsFlag) Set(v string) error {
 }
 
 func main() {
-	fmt.Printf("Metronome has started!\n\n")
-
 	buffer := initializeBuffer()
 
 	bpm, bpb, subdivisionsSlice := retrieveBeatsInput()
@@ -81,6 +79,8 @@ func retrieveBeatsInput() (int, int, []int) {
 func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisionsSlice []int, buffer *beep.Buffer) {
 	beatsInterval := time.Duration(float64(time.Minute) / float64(numBeatsPerMinute))
 	beatsTicker := time.NewTicker(beatsInterval)
+
+	fmt.Printf("Metronome is starting in: %s\n\n", beatsInterval)
 
 	beatsIndex := 0
 	for _ = range beatsTicker.C {
