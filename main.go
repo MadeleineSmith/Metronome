@@ -1,11 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"embed"
+	"flag"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -20,16 +19,33 @@ var (
 	res embed.FS
 )
 
+type SubdivisionsFlag []int
+
+func (flag *SubdivisionsFlag) String() string { return fmt.Sprint(*flag) }
+func (flag *SubdivisionsFlag) Set(v string) error {
+	// todo - add validation so length of this must match `-beats-per-bar` input
+
+	subdivisionsStringSlice := strings.Split(v, ",")
+
+	var subdivisionsIntSlice []int
+	for _, subdivision := range subdivisionsStringSlice {
+		integerSubdivision, _ := strconv.Atoi(subdivision)
+
+		subdivisionsIntSlice = append(subdivisionsIntSlice, integerSubdivision)
+	}
+
+	*flag = append(*flag, subdivisionsIntSlice...)
+	return nil
+}
+
 func main() {
-	println()
-	println("Metronome has started!")
-	println()
+	fmt.Printf("Metronome has started!\n\n")
 
 	buffer := initializeBuffer()
 
-	bpm, bpb, subdivisionsMap := retrieveBeatsInput()
+	bpm, bpb, subdivisionsSlice := retrieveBeatsInput()
 
-	initializeMetronome(bpm, bpb, subdivisionsMap, buffer)
+	initializeMetronome(bpm, bpb, subdivisionsSlice, buffer)
 }
 
 func initializeBuffer() *beep.Buffer {
@@ -49,42 +65,20 @@ func initializeBuffer() *beep.Buffer {
 	return buffer
 }
 
-func retrieveBeatsInput() (int, int, map[int]int) {
-	reader := bufio.NewReader(os.Stdin)
+func retrieveBeatsInput() (int, int, []int) {
+	bpm := flag.Int("beats-per-minute", 15, "Number of Beats Per Minute")
 
-	print("Beats Per Minute (default 15): ")
-	bpmInput, _ := reader.ReadString('\n')
-	bpm := 15
-	if bpmInput != "\n" {
-		bpm, _ = strconv.Atoi(strings.TrimRight(bpmInput, "\n"))
-	}
+	bpb := flag.Int("beats-per-bar", 4, "Number of Beats Per Bar")
 
-	print("Beats Per Bar (default 4): ")
-	bpbInput, _ := reader.ReadString('\n')
-	bpb := 4
-	if bpbInput != "\n" {
-		bpb, _ = strconv.Atoi(strings.TrimRight(bpbInput, "\n"))
-	}
+	// the index of an item in this slice indicates the beat number:
+	var subdivisionsSlice SubdivisionsFlag
+	flag.Var(&subdivisionsSlice, "subdivisions", "The Subdivisions for each beat")
 
-	println()
-	subdivisionsMap := make(map[int]int)
-	for i := 0; i < bpb; i++ {
-		fmt.Printf("Num subdivisions for beat number %d (default 4): ", i+1)
-
-		numSubdivisionsInput, _ := reader.ReadString('\n')
-		numSubdivisions := 4
-		if numSubdivisionsInput != "\n" {
-			numSubdivisions, _ = strconv.Atoi(strings.TrimRight(numSubdivisionsInput, "\n"))
-		}
-
-		subdivisionsMap[i] = numSubdivisions
-	}
-	println()
-
-	return bpm, bpb, subdivisionsMap
+	flag.Parse()
+	return *bpm, *bpb, subdivisionsSlice
 }
 
-func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisionsMap map[int]int, buffer *beep.Buffer) {
+func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisionsSlice []int, buffer *beep.Buffer) {
 	beatsInterval := time.Duration(float64(time.Minute) / float64(numBeatsPerMinute))
 	beatsTicker := time.NewTicker(beatsInterval)
 
@@ -106,7 +100,7 @@ func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisions
 		speaker.Play(pop)
 
 		// for each beat, I'm creating a new 'subdivisionsTicker' to keep track of the subdivisions
-		numSubdivisions := subdivisionsMap[beatNum]
+		numSubdivisions := subdivisionsSlice[beatNum]
 		subdivisionsInterval := beatsInterval / time.Duration(numSubdivisions)
 
 		subdivisionsTicker := time.NewTicker(subdivisionsInterval)
