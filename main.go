@@ -94,7 +94,11 @@ func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisions
 		// so for 4 beats in a bar, the value of this on each iteration will be 0, 1, 2, 3, 0 ...
 		beatNum := beatsIndex % numBeatsPerBar
 
-		println("========")
+		if beatNum == 0 {
+			// outputting at beginning of *bar*
+			println("========")
+		}
+
 		humanBeatNum := beatNum + 1
 		fmt.Printf("%d - \n", humanBeatNum)
 
