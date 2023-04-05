@@ -23,8 +23,6 @@ type SubdivisionsFlag []int
 
 func (flag *SubdivisionsFlag) String() string { return fmt.Sprint(*flag) }
 func (flag *SubdivisionsFlag) Set(v string) error {
-	// todo - add validation so length of this must match `-beats-per-bar` input
-
 	subdivisionsStringSlice := strings.Split(v, ",")
 
 	var subdivisionsIntSlice []int
@@ -73,6 +71,9 @@ func retrieveBeatsInput() (int, int, []int) {
 	flag.Var(&subdivisionsSlice, "subdivisions", "The Subdivisions for each beat")
 
 	flag.Parse()
+
+	// todo - validate that len of `subdivisionsSlice` matches `bpb` variable
+
 	return *bpm, *bpb, subdivisionsSlice
 }
 
