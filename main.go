@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -39,7 +40,10 @@ func (flag *SubdivisionsFlag) Set(v string) error {
 func main() {
 	buffer := initializeBuffer()
 
-	bpm, bpb, subdivisionsSlice := retrieveBeatsInput()
+	bpm, bpb, subdivisionsSlice, err := retrieveBeatsInput()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	initializeMetronome(bpm, bpb, subdivisionsSlice, buffer)
 }
@@ -61,7 +65,7 @@ func initializeBuffer() *beep.Buffer {
 	return buffer
 }
 
-func retrieveBeatsInput() (int, int, []int) {
+func retrieveBeatsInput() (int, int, []int, error) {
 	bpm := flag.Int("beats-per-minute", 15, "Number of Beats Per Minute")
 
 	bpb := flag.Int("beats-per-bar", 4, "Number of Beats Per Bar")
@@ -72,9 +76,14 @@ func retrieveBeatsInput() (int, int, []int) {
 
 	flag.Parse()
 
-	// todo - validate that len of `subdivisionsSlice` matches `bpb` variable
+	if len(subdivisionsSlice) != *bpb {
+		// note: the `beats-per-bar` flag is now technically unnecessary
+		// 	(as the `subdivisions` flag tells you how many beats are in a bar),
+		//	 but I quite like the explicitness
+		return 0, 0, nil, errors.New("num subdivisions must equal num beats per bar 😬")
+	}
 
-	return *bpm, *bpb, subdivisionsSlice
+	return *bpm, *bpb, subdivisionsSlice, nil
 }
 
 func initializeMetronome(numBeatsPerMinute int, numBeatsPerBar int, subdivisionsSlice []int, buffer *beep.Buffer) {
