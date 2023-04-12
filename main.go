@@ -76,10 +76,10 @@ func retrieveBeatsInput() (int, int, []int, error) {
 
 	flag.Parse()
 
+	// note: the `beats-per-bar` flag is now technically unnecessary
+	// 	(as the `subdivisions` flag tells you how many beats are in a bar),
+	//	 but I quite like the explicitness
 	if len(subdivisionsSlice) != *bpb {
-		// note: the `beats-per-bar` flag is now technically unnecessary
-		// 	(as the `subdivisions` flag tells you how many beats are in a bar),
-		//	 but I quite like the explicitness
 		return 0, 0, nil, errors.New("num subdivisions must equal num beats per bar 😬")
 	}
 
